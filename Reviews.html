@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviews - FoodieHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body { background: #f9f9f9; color: #333; }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      z-index: 1000;
+    }
+    .nav-logo { font-size: 22px; font-weight: bold; color: white; text-decoration: none; }
+    .nav-logo span { color: white; }
+    .nav-links { list-style: none; display: flex; gap: 25px; }
+    .nav-links a { text-decoration: none; color: white; font-size: 16px; transition: 0.3s; }
+    .nav-links a:hover { color: black; }
+
+    /* HERO */
+    .reviews-hero {
+      margin-top: 60px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      padding: 60px 20px;
+      text-align: center;
+      color: white;
+    }
+    .reviews-hero h1 { font-size: 42px; font-weight: 700; }
+    .reviews-hero p { font-size: 18px; margin-top: 10px; opacity: 0.9; }
+
+    /* STATS */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      background: white;
+      padding: 30px 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat h2 { font-size: 36px; color: #ff7e5f; font-weight: 700; }
+    .stat p { font-size: 14px; color: #777; }
+
+    /* MAIN CONTENT */
+    .reviews-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .reviews-container { grid-template-columns: 1fr; }
+    }
+
+    /* SUBMIT FORM */
+    .submit-section {
+      background: white;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      height: fit-content;
+    }
+    .submit-section h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+    }
+    .submit-section h2 span { color: #ff7e5f; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      outline: none;
+      transition: 0.3s;
+      background: #fafafa;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #ff7e5f;
+      background: white;
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    /* STAR RATING INPUT */
+    .star-input { display: flex; gap: 8px; margin-top: 5px; }
+    .star-input i {
+      font-size: 28px;
+      color: #ddd;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .star-input i:hover,
+    .star-input i.active { color: #ffc107; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+    .submit-btn:hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(255,126,95,0.4); }
+
+    #formError { color: red; font-size: 13px; margin-top: 8px; }
+    #formSuccess { color: green; font-size: 13px; margin-top: 8px; }
+
+    /* REVIEWS LIST */
+    .reviews-list-section h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 25px;
+    }
+    .reviews-list-section h2 span { color: #ff7e5f; }
+
+    /* FILTER */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 18px;
+      border: 2px solid #ff7e5f;
+      background: white;
+      color: #ff7e5f;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: #ff7e5f;
+      color: white;
+    }
+
+    /* REVIEW CARD */
+    .review-card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+      transition: 0.3s;
+      animation: fadeInUp 0.4s ease forwards;
+    }
+    .review-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .reviewer-info { display: flex; align-items: center; gap: 12px; }
+    .avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .reviewer-name { font-weight: 600; font-size: 15px; color: #333; }
+    .review-date { font-size: 12px; color: #aaa; }
+    .review-stars { color: #ffc107; font-size: 16px; }
+    .review-food-tag {
+      display: inline-block;
+      background: #fff3ee;
+      color: #ff7e5f;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .review-text { font-size: 14px; color: #555; line-height: 1.6; }
+
+    /* HELPFUL */
+    .helpful-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .helpful-btn {
+      background: none;
+      border: 1px solid #eee;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #777;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .helpful-btn:hover { border-color: #ff7e5f; color: #ff7e5f; background: #fff3ee; }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white;
+      padding: 14px 25px;
+      border-radius: 30px;
+      font-weight: 500;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      transition: top 0.5s ease;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    #toast.show { top: 80px; }
+
+    /* FOOTER */
+    .footer {
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      color: #fff;
+      padding: 50px 20px 20px;
+      margin-top: 50px;
+    }
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-logo { font-size: 28px; font-weight: bold; }
+    .footer-logo span { color: #ff5722; }
+    .footer-section h3 { margin-bottom: 10px; color: #ff5722; }
+    .footer-section p { font-size: 14px; color: #ccc; }
+    .footer-section ul { list-style: none; padding: 0; }
+    .footer-section ul li { margin: 8px 0; }
+    .footer-section ul li a { text-decoration: none; color: #ccc; transition: 0.3s; }
+    .footer-section ul li a:hover { color: #ff5722; }
+    .social-icons a {
+      display: inline-block;
+      margin-right: 10px;
+      font-size: 18px;
+      color: #fff;
+      background: #ff5722;
+      padding: 10px;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .social-icons a:hover { transform: scale(1.2); }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 30px;
+      border-top: 1px solid #444;
+      padding-top: 10px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    /* NO REVIEWS */
+    .no-reviews {
+      text-align: center;
+      padding: 40px;
+      color: #aaa;
+      font-size: 16px;
+    }
+    .no-reviews i { font-size: 48px; color: #ffcdb8; margin-bottom: 10px; display: block; }
+
+.profile {
+  position: relative;
+}
+
+#profileMenu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+#profileMenu button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: black;
+}
+#profileIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  color: #f28c63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+
+@media (max-width: 768px) {
+
+  /* NAVBAR */
+  .navbar {
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .nav-links {
+    display: none;        /* hidden by default on mobile */
+    flex-direction: column;
+    width: 100%;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .nav-links.open {
+    display: flex;        /* shown when hamburger is clicked */
+  }
+
+  .nav-links a {
+    font-size: 15px;
+    padding: 8px 20px;
+  }
+
+  /* HAMBURGER BUTTON */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .hamburger span {
+    width: 22px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    display: block;
+    transition: 0.3s;
+  }
+
+  /* HERO SLIDER */
+  .hero {
+    height: 40vh;
+  }
+
+  .overlay h1 {
+    font-size: 1.8rem;
+  }
+
+  /* MOOD BUTTONS */
+  .mood-buttons {
+    gap: 10px;
+  }
+
+  .mood-buttons button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* CUISINE GRID */
+  .cuisine {
+    padding: 40px 15px;
+  }
+
+  .cuisine-grid {
+    gap: 20px;
+  }
+
+  .cuisine-card {
+    width: 150px;
+  }
+
+  /* FOOD GRID */
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px 10px;
+  }
+
+  .food-card img {
+    height: 160px;
+  }
+
+  /* TRENDING GRID */
+  .trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  /* MINI CART */
+  .mini-cart {
+    bottom: 15px !important;
+    right: 15px;
+    left: 15px;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  /* LOGIN CARD */
+  .login-card {
+    width: 90%;
+    padding: 20px;
+  }
+
+  /* FOOTER */
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* CART PAGE */
+  .cart-page {
+    padding: 80px 15px;
+  }
+
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* SEASON SECTION */
+  .season {
+    padding: 30px 10px;
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    margin: 20px 15px;
+  }
+
+  /* CUISINE PAGE */
+  .cuisine-page {
+    padding: 80px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Very small phones — single column */
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trending-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cuisine-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cuisine-card {
+    width: 90%;
+  }
+
+  .overlay h1 {
+    font-size: 1.4rem;
+  }
+
+  .food-card img {
+    height: 200px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html?home=true" class="nav-logo">Foodie<span>Hub</span></a>
+  <button class="hamburger" onclick="toggleMenu()" >
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-right">
+  <ul class="nav-links">
+    <li><a href="index.html?home=true">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="cart.html">Cart 🛒(<span id="cartCount">0</span>)</a></li>
+    </ul>
+<div class="profile" onclick="toggleProfile()">
+    <div id="profileIcon"></div>
+
+    <div id="profileMenu" class="hidden">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+</div>
+</nav>
+
+<!-- HERO -->
+<div class="reviews-hero">
+  <h1>⭐ Customer Reviews</h1>
+  <p>See what our customers are saying about FoodieHub!</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <h2 id="totalReviews">0</h2>
+    <p>Total Reviews</p>
+  </div>
+  <div class="stat">
+    <h2 id="avgRating">0.0</h2>
+    <p>Average Rating</p>
+  </div>
+  <div class="stat">
+    <h2 id="fiveStars">0</h2>
+    <p>5 Star Reviews</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="reviews-container">
+
+  <!-- SUBMIT FORM -->
+  <div class="submit-section">
+    <h2>Write a <span>Review</span> ✍️</h2>
+
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="reviewName" placeholder="Enter your name">
+    </div>
+
+    <div class="form-group">
+      <label>Food Item</label>
+      <select id="reviewFood">
+        <option value="">-- Select a food item --</option>
+        <option>Pizza</option>
+        <option>Biryani</option>
+        <option>Burger</option>
+        <option>Pasta</option>
+        <option>Ice Cream</option>
+        <option>Noodles</option>
+        <option>Dosa</option>
+        <option>Noodles</option>
+        <option>Pasta</option>
+        <option>Risotto</option>
+        <option>Caprese Salad</option>
+        <option>Steak</option>
+        <option>Ratatouille</option>
+        <option>chapathi</option>
+        <option>tandoori roti</option>
+        <option>brownie</option>
+        <option>cake</option>
+        <option>Butter Chicken</option>
+        <option>Croissant</option>
+        <option>Tiramisu</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Your Rating</label>
+      <div class="star-input" id="starInput">
+        <i class="fas fa-star" data-val="1"></i>
+        <i class="fas fa-star" data-val="2"></i>
+        <i class="fas fa-star" data-val="3"></i>
+        <i class="fas fa-star" data-val="4"></i>
+        <i class="fas fa-star" data-val="5"></i>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Your Review</label>
+      <textarea id="reviewText" placeholder="Share your experience with us..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="submitReview()">Submit Review 🚀</button>
+    <p id="formError"></p>
+    <p id="formSuccess"></p>
+  </div>
+
+  <!-- REVIEWS LIST -->
+  <div class="reviews-list-section">
+    <h2>All <span>Reviews</span> 💬</h2>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterReviews('all', this)">All</button>
+      <button class="filter-btn" onclick="filterReviews(5, this)">⭐ 5 Stars</button>
+      <button class="filter-btn" onclick="filterReviews(4, this)">⭐ 4 Stars</button>
+      <button class="filter-btn" onclick="filterReviews(3, this)">⭐ 3 Stars</button>
+    </div>
+
+    <div id="reviewsList"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section">
+      <h1 class="footer-logo">Foodie<span>Hub</span></h1>
+      <p>Delicious food delivered to your doorstep.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html?home=true">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <p>Email: foodiehub@gmail.com</p>
+      <p>Phone: +91 9876543210</p>
+      <p>Location: India</p>
+    </div>
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="https://www.geeksforgeeks.org/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.w3schools.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://x.com/Fooddotcom"><i class="fab fa-twitter"></i></a>
+        <a href="http://www.youtube.com/@FoodLinkyt"><i class="fab fa-youtube"></i></a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Foodie Hub | All Rights Reserved</p>
+  </div>
+</footer>
+
+<div id="toast">Review submitted!</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function updateCartCount() {
+  let count = cart.reduce((s, i) => s + i.qty, 0);
+  let el = document.getElementById("cartCount");
+  if (el) el.innerText = count;
+}
+
+updateCartCount();
+// Profile
+// ADD THIS:
+let user = localStorage.getItem("user");
+let profileIcon = document.getElementById("profileIcon");
+if (profileIcon && user) {
+  profileIcon.innerText = user.charAt(0).toUpperCase();
+}
+function toggleProfile() {
+  let menu = document.getElementById("profileMenu");
+  menu.style.display = menu.style.display === "none" ? "block" : "none";
+}
+
+function logout() {
+  window.location.href = "index.html";
+}
+  let selectedRating = 0;
+
+  // STAR INPUT
+  const stars = document.querySelectorAll('#starInput i');
+  stars.forEach(star => {
+    star.addEventListener('mouseover', () => {
+      let val = parseInt(star.dataset.val);
+      stars.forEach((s, i) => {
+        s.classList.toggle('active', i < val);
+      });
+    });
+    star.addEventListener('mouseout', () => {
+      stars.forEach((s, i) => {
+        s.classList.toggle('active', i < selectedRating);
+      });
+    });
+    star.addEventListener('click', () => {
+      selectedRating = parseInt(star.dataset.val);
+      stars.forEach((s, i) => {
+        s.classList.toggle('active', i < selectedRating);
+      });
+    });
+  });
+
+  // SUBMIT REVIEW
+  function submitReview() {
+    let name = document.getElementById("reviewName").value.trim();
+    let food = document.getElementById("reviewFood").value;
+    let text = document.getElementById("reviewText").value.trim();
+    let error = document.getElementById("formError");
+    let success = document.getElementById("formSuccess");
+
+    error.innerText = "";
+    success.innerText = "";
+
+    if (!name) { error.innerText = "Please enter your name"; return; }
+    if (name.length < 3) { error.innerText = "Name must be at least 3 characters"; return; }
+    if (!/^[a-zA-Z ]+$/.test(name)) { error.innerText = "Name should contain only letters"; return; }
+    if (!food) { error.innerText = "Please select a food item"; return; }
+    if (selectedRating === 0) { error.innerText = "Please select a rating"; return; }
+    if (!text) { error.innerText = "Please write your review"; return; }
+    if (text.length < 10) { error.innerText = "Review must be at least 10 characters"; return; }
+
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    let review = {
+      name,
+      food,
+      rating: selectedRating,
+      text,
+      date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      helpful: 0
+    };
+
+    reviews.unshift(review);
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    // reset form
+    document.getElementById("reviewName").value = "";
+    document.getElementById("reviewFood").value = "";
+    document.getElementById("reviewText").value = "";
+    selectedRating = 0;
+    stars.forEach(s => s.classList.remove('active'));
+
+    success.innerText = "✅ Review submitted successfully!";
+    showToast("Review submitted! 🎉");
+    renderReviews();
+    updateStats();
+  }
+
+  // RENDER REVIEWS
+  function renderReviews(filter = 'all') {
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    let container = document.getElementById("reviewsList");
+
+    let filtered = filter === 'all' ? reviews : reviews.filter(r => r.rating === filter);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="no-reviews">
+          <i class="fas fa-comment-slash"></i>
+          ${filter === 'all' ? 'No reviews yet. Be the first to review!' : 'No reviews for this rating.'}
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map((r, i) => `
+      <div class="review-card" style="animation-delay:${i * 0.1}s">
+        <div class="review-header">
+          <div class="reviewer-info">
+            <div class="avatar">${r.name.charAt(0).toUpperCase()}</div>
+            <div>
+              <div class="reviewer-name">${r.name}</div>
+              <div class="review-date">${r.date}</div>
+            </div>
+          </div>
+          <div class="review-stars">${'⭐'.repeat(r.rating)}</div>
+        </div>
+        <div class="review-food-tag">🍽️ ${r.food}</div>
+        <p class="review-text">${r.text}</p>
+        <div class="helpful-row">
+          <span style="font-size:12px;color:#aaa;">Helpful?</span>
+          <button class="helpful-btn" onclick="markHelpful(${i})">👍 ${r.helpful}</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // FILTER
+  function filterReviews(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderReviews(filter);
+  }
+
+  // HELPFUL
+  function markHelpful(index) {
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    reviews[index].helpful++;
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+    renderReviews();
+  }
+
+  // STATS
+  function updateStats() {
+  let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+  
+  let baseTotal = 5000;
+  let baseAvgTotal = 22840;
+  let baseFiveStars = 4500;
+
+  let total = baseTotal + reviews.length;
+  let avgTotal = baseAvgTotal + reviews.reduce((s, r) => s + r.rating, 0);
+  let fiveStars = baseFiveStars + reviews.filter(r => r.rating === 5).length;
+  let avg = (avgTotal / total).toFixed(1);
+
+  document.getElementById("totalReviews").innerText = total.toLocaleString('en-IN');
+  document.getElementById("avgRating").innerText = avg + " ⭐";
+  document.getElementById("fiveStars").innerText = fiveStars.toLocaleString('en-IN');
+}
+function toggleMenu() {
+  document.querySelector(".nav-links").classList.toggle("open");
+}
+
+// Show hamburger only on mobile
+window.addEventListener("resize", () => {
+  let ham = document.querySelector(".hamburger");
+  if (ham) ham.style.display = window.innerWidth <= 768 ? "flex" : "none";
+});
+window.dispatchEvent(new Event("resize")); // run on load
+
+  // TOAST
+  function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }
+
+ // INIT - Add default reviews if none exist
+function loadDefaultReviews() {
+  let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+  
+  if (reviews.length === 0) {
+    let defaultReviews = [
+  { name: "Priya Sharma", food: "Biryani", rating: 5, text: "Absolutely amazing biryani! The spices were perfectly balanced and the rice was cooked to perfection. Will definitely order again!", date: "10 Apr 2026", helpful: 12 },
+  { name: "Rahul Verma", food: "Pizza", rating: 5, text: "Best pizza I have ever had! The cheese was perfectly melted and the crust was crispy. Delivered hot and fresh. Loved it!", date: "9 Apr 2026", helpful: 8 },
+  { name: "Sneha Patel", food: "Butter Chicken", rating: 4, text: "Really creamy and delicious butter chicken. The gravy was rich and flavorful. Portion size was good too. Highly recommend!", date: "8 Apr 2026", helpful: 6 },
+  { name: "Arjun Nair", food: "Burger", rating: 5, text: "Juicy and filling burger! The patty was grilled perfectly and the sauce was amazing. Great value for money!", date: "7 Apr 2026", helpful: 9 },
+  { name: "Divya Menon", food: "Pasta", rating: 4, text: "Creamy white sauce pasta was delicious. Loved the cheesy flavor. Would have been perfect with some garlic bread!", date: "6 Apr 2026", helpful: 5 },
+  { name: "Karthik Raja", food: "Dosa", rating: 5, text: "Crispy golden dosa with perfect sambar and chutney. Reminded me of authentic South Indian taste. Absolutely loved it!", date: "5 Apr 2026", helpful: 11 },
+  { name: "Ananya Singh", food: "Ice Cream", rating: 4, text: "Delicious ice cream sundae! So many flavors to choose from. Perfect dessert after a heavy meal. Will order again!", date: "4 Apr 2026", helpful: 7 },
+  { name: "Vikram Reddy", food: "Tiramisu", rating: 5, text: "The tiramisu was heavenly! Perfect balance of coffee and cream. Best dessert on the menu without any doubt!", date: "3 Apr 2026", helpful: 14 },
+  { name: "Meera Iyer", food: "Noodles", rating: 4, text: "Stir fried noodles were perfectly cooked with great flavor. Spice level was just right. Very filling and tasty!", date: "2 Apr 2026", helpful: 6 },
+  { name: "Rohan Gupta", food: "Paneer Tikka", rating: 5, text: "Paneer tikka was absolutely outstanding! Perfectly grilled with amazing marinade. One of the best starters I have had!", date: "1 Apr 2026", helpful: 10 },
+  { name: "Lakshmi Nair", food: "Gulab Jamun", rating: 5, text: "Soft and syrupy gulab jamun melted in my mouth! Perfect sweetness and texture. Best dessert for any occasion!", date: "31 Mar 2026", helpful: 9 },
+  { name: "Aditya Kumar", food: "Burger", rating: 3, text: "Burger was decent but could have been juicier. The bun was fresh and toppings were good. Overall an average experience.", date: "30 Mar 2026", helpful: 3 },
+  { name: "Pooja Krishnan", food: "Croissant", rating: 5, text: "Buttery and flaky croissant was absolutely perfect! Reminded me of a French bakery. Great with morning coffee!", date: "29 Mar 2026", helpful: 8 },
+  { name: "Sanjay Mehta", food: "Biryani", rating: 4, text: "Very flavorful biryani with tender meat. The aroma was incredible. Slightly less spicy than expected but still delicious!", date: "28 Mar 2026", helpful: 7 },
+  { name: "Kavya Rao", food: "Pizza", rating: 4, text: "Cheesy and delicious pizza with fresh toppings. Crust was crispy and sauce was tangy. Great experience overall!", date: "27 Mar 2026", helpful: 5 },
+  { name: "Nikhil Joshi", food: "Pasta", rating: 5, text: "Absolutely loved the pasta! Rich creamy sauce with perfect seasoning. Portions were generous and delivery was fast!", date: "26 Mar 2026", helpful: 11 },
+  { name: "Shreya Das", food: "Dosa", rating: 3, text: "Dosa was good but sambar could be improved. The chutney was tasty though. Will try other items next time!", date: "25 Mar 2026", helpful: 4 },
+  { name: "Varun Pillai", food: "Butter Chicken", rating: 5, text: "Best butter chicken in town! The gravy was rich, creamy and perfectly spiced. Goes amazingly well with naan!", date: "24 Mar 2026", helpful: 15 },
+  { name: "Ishaan Malhotra", food: "Ice Cream", rating: 4, text: "Ice cream was super creamy and delicious! Loved the variety of flavors available. Perfect treat on a hot day!", date: "23 Mar 2026", helpful: 6 },
+  { name: "Nandini Bose", food: "Tiramisu", rating: 5, text: "The tiramisu was out of this world! Perfectly layered with rich mascarpone and espresso. A must try dessert!", date: "22 Mar 2026", helpful: 13 }
+];
+      
+    localStorage.setItem("reviews", JSON.stringify(defaultReviews));
+  }
+}
+
+// INIT
+loadDefaultReviews();
+renderReviews();
+updateStats();</script>
+
+</body>
+</html>

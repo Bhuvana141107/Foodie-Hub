@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - FoodieHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #ff7e5f;
+      --secondary: #feb47b;
+      --dark: #2d3436;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background: #f9f9f9; color: #333; overflow-x: hidden; }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; width: 100%;
+      padding: 15px 40px; display: flex;
+      justify-content: space-between; align-items: center;
+      height: 60px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      z-index: 1000;
+    }
+    .nav-logo { font-size: 22px; font-weight: 700; color: white; text-decoration: none; }
+    .nav-links { list-style: none; display: flex; gap: 25px; align-items: center; }
+    .nav-links a { text-decoration: none; color: white; font-size: 15px; transition: 0.3s; }
+    .nav-links a:hover { color: #2d3436; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    #profileIcon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: white; color: #f28c63;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; cursor: pointer; font-size: 16px;
+    }
+    #profileMenu {
+      display: none; position: absolute; top: 50px; right: 40px;
+      background: white; padding: 8px; border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 9999;
+    }
+    #profileMenu button {
+      background: none; border: none; cursor: pointer;
+      font-size: 14px; color: black; padding: 5px 10px;
+    }
+
+    /* HERO */
+    .menu-hero {
+      margin-top: 60px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      padding: 50px 20px 90px;
+      text-align: center; color: white;
+      position: relative; overflow: hidden;
+    }
+    .menu-hero::before {
+      content: ''; position: absolute;
+      bottom: -30px; left: 0; width: 100%; height: 60px;
+      background: #f9f9f9;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+    .menu-hero h1 { font-size: 46px; font-weight: 700; }
+    .menu-hero h1 span { color: #2d3436; }
+    .menu-hero p { font-size: 17px; margin-top: 8px; opacity: 0.9; }
+
+    /* SEARCH BAR */
+    .search-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px 10px;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 50px;
+      padding: 12px 20px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+      border: 2px solid #eee;
+      transition: 0.3s;
+    }
+    .search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 5px 25px rgba(255,126,95,0.2);
+    }
+    .search-box i { color: #aaa; font-size: 18px; margin-right: 12px; }
+    .search-box input {
+      border: none; outline: none;
+      font-size: 15px; width: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: #333; background: transparent;
+    }
+    .search-box input::placeholder { color: #bbb; }
+    .clear-btn {
+      background: none; border: none;
+      color: #bbb; font-size: 18px;
+      cursor: pointer; padding: 0 5px;
+      display: none;
+    }
+    .clear-btn.visible { display: block; }
+
+    /* CATEGORY BUTTONS */
+    .category-section {
+      display: flex; justify-content: center;
+      gap: 15px; padding: 20px 20px; flex-wrap: wrap;
+    }
+    .cat-btn {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 8px; padding: 15px 30px;
+      border: 2px solid #eee; background: white;
+      border-radius: 20px; cursor: pointer;
+      font-size: 15px; font-weight: 600; color: #777;
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      min-width: 120px;
+    }
+    .cat-btn .cat-icon { font-size: 28px; }
+    .cat-btn:hover {
+      border-color: var(--primary); color: var(--primary);
+      transform: translateY(-4px);
+    }
+    .cat-btn.active {
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      border-color: transparent; color: white;
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(255,126,95,0.4);
+    }
+
+    /* SECTION TITLE */
+    .section-title { text-align: center; padding: 5px 20px 20px; }
+    .section-title h2 { font-size: 26px; color: #2d3436; }
+    .section-title h2 span { color: var(--primary); }
+    .section-title p { color: #999; font-size: 14px; margin-top: 5px; }
+
+    /* FOOD GRID */
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 25px; padding: 10px 40px 60px;
+      max-width: 1300px; margin: 0 auto;
+    }
+
+    /* FOOD CARD */
+    .food-card {
+      background: white; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: popIn 0.4s ease forwards;
+      opacity: 0; position: relative;
+    }
+    .food-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .food-card img {
+      width: 100%; height: 200px; object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .food-card:hover img { transform: scale(1.08); }
+
+    .food-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white; padding: 4px 12px;
+      border-radius: 20px; font-size: 11px; font-weight: 600;
+    }
+    .like-btn {
+      position: absolute; top: 12px; right: 12px;
+      background: white; width: 34px; height: 34px;
+      border-radius: 50%; display: flex;
+      align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      font-size: 16px; transition: 0.2s; border: none;
+    }
+    .like-btn:hover { transform: scale(1.2); }
+
+    .card-content { padding: 15px; }
+    .card-content h4 { font-size: 16px; font-weight: 600; color: #2d3436; margin-bottom: 4px; }
+    .card-content p { font-size: 13px; color: #999; margin-bottom: 12px; }
+    .food-category-tag {
+      display: inline-block;
+      background: #fff3ee; color: var(--primary);
+      padding: 2px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; margin-bottom: 8px;
+    }
+
+    .price-row { display: flex; justify-content: space-between; align-items: center; }
+    .price { font-size: 18px; font-weight: 700; color: var(--primary); }
+
+    .add-btn {
+      background: white; color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 6px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: 0.3s;
+    }
+    .add-btn:hover { background: var(--primary); color: white; }
+
+    .qty-box {
+      display: flex; align-items: center;
+      border: 2px solid var(--primary);
+      border-radius: 8px; overflow: hidden;
+    }
+    .qty-box button {
+      background: white; border: none;
+      color: var(--primary); font-size: 16px;
+      padding: 4px 10px; cursor: pointer; font-weight: bold;
+    }
+    .qty-box span { padding: 4px 10px; font-weight: 600; }
+
+    /* NO RESULTS */
+    .no-results {
+      text-align: center; padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+    .no-results i { font-size: 60px; color: #ffcdb8; margin-bottom: 15px; display: block; }
+    .no-results h3 { font-size: 22px; color: #999; margin-bottom: 8px; }
+    .no-results p { font-size: 14px; color: #bbb; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; top: -100px; left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white; padding: 14px 25px; border-radius: 30px;
+      font-weight: 500; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      transition: top 0.5s ease; z-index: 9999;
+      pointer-events: none; white-space: nowrap;
+    }
+
+    /* MINI CART */
+    #miniCart {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      color: white; padding: 12px 20px; border-radius: 30px;
+      display: flex; align-items: center; gap: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 9999; max-width: 90%;
+    }
+    #miniCart.hidden { display: none; }
+    #miniCart button {
+      background: white; color: var(--primary);
+      border: none; padding: 8px 15px;
+      border-radius: 20px; cursor: pointer;
+      font-weight: bold; font-size: 13px;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      color: #fff; padding: 50px 20px 20px; margin-top: 20px;
+    }
+    .footer-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px; max-width: 1100px; margin: 0 auto;
+    }
+    .footer-logo { font-size: 28px; font-weight: bold; }
+    .footer-logo span { color: #ff5722; }
+    .footer-section h3 { margin-bottom: 10px; color: #ff5722; }
+    .footer-section p { font-size: 14px; color: #ccc; }
+    .footer-section ul { list-style: none; padding: 0; }
+    .footer-section ul li { margin: 8px 0; }
+    .footer-section ul li a { text-decoration: none; color: #ccc; transition: 0.3s; }
+    .footer-section ul li a:hover { color: #ff5722; }
+    .social-icons a {
+      display: inline-block; margin-right: 10px;
+      font-size: 16px; color: #fff; background: #ff5722;
+      padding: 9px; border-radius: 50%; transition: 0.3s;
+    }
+    .social-icons a:hover { transform: scale(1.2); }
+    .footer-bottom {
+      text-align: center; margin-top: 30px;
+      border-top: 1px solid #444; padding-top: 10px;
+      font-size: 14px; color: #aaa;
+      }
+/* ===== MOBILE RESPONSIVENESS ===== */
+
+@media (max-width: 768px) {
+
+  /* NAVBAR */
+  .navbar {
+    padding: 10px 15px;
+    flex-wrap: wrap;
+    height: auto;
+  }
+
+  .nav-links {
+    display: none;        /* hidden by default on mobile */
+    flex-direction: column;
+    width: 100%;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .nav-links.open {
+    display: flex;        /* shown when hamburger is clicked */
+  }
+
+  .nav-links a {
+    font-size: 15px;
+    padding: 8px 20px;
+  }
+
+  /* HAMBURGER BUTTON */
+  .hamburger {
+  display: none;
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 5px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 2px;
+  background: white !important;
+  border-radius: 2px;
+  display: block;
+  transition: 0.3s;
+}
+
+.hamburger:hover {
+  background: none !important;
+  transform: none !important;
+}
+
+
+  /* HERO SLIDER */
+  .hero {
+    height: 40vh;
+  }
+
+  .overlay h1 {
+    font-size: 1.8rem;
+  }
+
+  /* MOOD BUTTONS */
+  .mood-buttons {
+    gap: 10px;
+  }
+
+  .mood-buttons button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* CUISINE GRID */
+  .cuisine {
+    padding: 40px 15px;
+  }
+
+  .cuisine-grid {
+    gap: 20px;
+  }
+
+  .cuisine-card {
+    width: 150px;
+  }
+
+  /* FOOD GRID */
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px 10px;
+  }
+
+  .food-card img {
+    height: 160px;
+  }
+
+  /* TRENDING GRID */
+  .trending-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  /* MINI CART */
+  .mini-cart {
+    bottom: 15px !important;
+    right: 15px;
+    left: 15px;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  /* LOGIN CARD */
+  .login-card {
+    width: 90%;
+    padding: 20px;
+  }
+
+  /* FOOTER */
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* CART PAGE */
+  .cart-page {
+    padding: 80px 15px;
+  }
+
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* SEASON SECTION */
+  .season {
+    padding: 30px 10px;
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    margin: 20px 15px;
+  }
+
+  /* CUISINE PAGE */
+  .cuisine-page {
+    padding: 80px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Very small phones — single column */
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trending-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cuisine-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cuisine-card {
+    width: 90%;
+  }
+
+  .overlay h1 {
+    font-size: 1.4rem;
+  }
+
+  .food-card img {
+    height: 200px;
+  }
+ .hamburger {
+    display: flex !important;
+    margin-left: auto;
+  }
+}
+
+
+    
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html?home=true" class="nav-logo">Foodie<span>Hub</span></a>
+  <button class="hamburger" onclick="toggleMenu()" >
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html?home=true">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="cart.html">Cart 🛒 (<span id="cartCount">0</span>)</a></li>
+    </ul>
+    <div style="position:relative;">
+      <div id="profileIcon" onclick="toggleProfile()"></div>
+      <div id="profileMenu">
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="menu-hero">
+  <h1>Our <span>Menu</span> 🍽️</h1>
+  <p>Fresh ingredients, amazing flavors — crafted just for you</p>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-wrapper">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Search for food, snacks, meals..." oninput="searchFood()">
+    <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+  </div>
+</div>
+
+<!-- CATEGORY BUTTONS -->
+<div class="category-section" id="categorySection">
+  <button class="cat-btn active" onclick="showCategory('breakfast', this)">
+    <span class="cat-icon">🌅</span>Breakfast
+  </button>
+  <button class="cat-btn" onclick="showCategory('lunch', this)">
+    <span class="cat-icon">☀️</span>Lunch
+  </button>
+  <button class="cat-btn" onclick="showCategory('snacks', this)">
+    <span class="cat-icon">🍟</span>Snacks
+  </button>
+  <button class="cat-btn" onclick="showCategory('dinner', this)">
+    <span class="cat-icon">🌙</span>Dinner
+  </button>
+</div>
+
+<!-- SECTION TITLE -->
+<div class="section-title">
+  <h2 id="categoryTitle">🌅 <span>Breakfast</span> Menu</h2>
+  <p id="categoryDesc">Start your day with our delicious breakfast options</p>
+</div>
+
+<!-- FOOD GRID -->
+<div class="food-grid" id="menuGrid"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section">
+      <h1 class="footer-logo">Foodie<span>Hub</span></h1>
+      <p>Delicious food delivered to your doorstep.</p>
+    </div>
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html?home=true">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <p>Email: foodiehub@gmail.com</p>
+      <p>Phone: +91 9876543210</p>
+      <p>Location: India</p>
+    </div>
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="https://www.geeksforgeeks.org/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.w3schools.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://x.com/Fooddotcom"><i class="fab fa-twitter"></i></a>
+        <a href="http://www.youtube.com/@FoodLinkyt"><i class="fab fa-youtube"></i></a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Foodie Hub | All Rights Reserved</p>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<div id="miniCart" class="hidden">
+  <span id="miniText">0 items | ₹0</span>
+  <button onclick="window.location.href='cart.html'">View Cart</button>
+</div>
+
+<script>
+function toggleMenu() {
+  document.querySelector(".nav-links").classList.toggle("open");
+}
+
+  const menuData = {
+    breakfast: [
+      { name: "Masala Dosa",    price: 120, img: "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400&h=300&fit=crop", desc: "Crispy dosa with spicy potato filling",       badge: "Popular" },
+
+      { name: "Idli Sambar",    price: 80,  img: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=400&h=300&fit=crop", desc: "Soft steamed rice cakes with sambar",        badge: "Healthy" },
+
+      { name: "Poha",           price: 70,  img: "poha.jpg", desc: "Flattened rice with veggies and spices",     badge: "" },
+      { name: "Upma",           price: 75,  img: "upma.jpg", desc: "Savory semolina porridge with mustard",      badge: "" },
+      { name: "Paratha",        price: 90,  img: "paratha.jpg", desc: "Whole wheat flatbread with butter",          badge: "Must Try" },
+      { name: "Aloo Puri",      price: 110, img: "puri.jpg", desc: "Fluffy puri with spicy potato curry",        badge: "" },
+
+      { name: "Croissant",      price: 150, img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop", desc: "Buttery flaky French pastry",                 badge: "Premium" },
+      { name: "Pancakes",       price: 130, img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop", desc: "Fluffy pancakes with maple syrup",            badge: "" },
+      { name: "Omelette",       price: 100, img: "https://images.unsplash.com/photo-1510693206972-df098062cb71?w=400&h=300&fit=crop", desc: "Fluffy egg omelette with fresh veggies",     badge: "Healthy" },
+
+      { name: "Medu Vada",      price: 60,  img: "vada.jpg", desc: "Crispy fried lentil donuts with chutney",   badge: "" },
+      { name: "Pongal",         price: 85,  img: "pongal.jpg", desc: "Rice and lentil porridge with ghee",         badge: "South Special" },
+      { name: "French Toast",   price: 120, img: "toast.jpg", desc: "Egg dipped bread with honey drizzle",        badge: "" },
+      { name: "Paneer Bhurji",  price: 150, img: "bhurji.jpg", desc: "Spicy, savory, scrambled cottage-cheese",    badge: "Bestseller" },
+      { name: "Smoothie Bowl",  price: 180, img: "smoothie.jpg", desc: "Fresh fruit smoothie with healthy toppings", badge: "Healthy" },
+      { name: "Bread Omelette", price: 90,  img: "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&h=300&fit=crop", desc: "Toasted bread with fluffy egg omelette",     badge: "" }
+    ],
+    lunch: [
+      { name: "Chicken Biryani",      price: 280, img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400&h=300&fit=crop", desc: "Aromatic basmati rice with spiced chicken",    badge: "Bestseller" },
+      { name: "Butter Chicken",       price: 300, img: "butterchicken.jpg", desc: "Creamy tomato-based chicken curry",            badge: "Popular" },
+      { name: "Dal Makhani",          price: 180, img: "daal.jpg", desc: "Creamy slow cooked black lentil curry",         badge: "" },
+      { name: "Lemon Rice", price: 220, img: "lemonrice.jpg", desc: "Tangy, crunchy South Indian rice",          badge: "Must Try" },
+      { name: "Phulka",         price: 140, img: "phulka.jpg", desc: "Soft, puffed wheat flatbread.",     badge: "Healthy" },
+      { name: "Veg Fried Rice",       price: 180, img: "vegfried.jpg", desc: "Wok tossed rice with fresh vegetables",        badge: "" },
+      { name: "Hakka Noodles",        price: 160, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop", desc: "Stir fried noodles in spicy sauce",            badge: "" },
+      { name: "Indian Thali",         price: 280, img: "thali.jpg", desc: "Complete Indian meal with all sides",          badge: "Value" },
+      { name: "Rajma Chawal",         price: 160, img: "rajmachawal.jpg", desc: "Red kidney beans curry with steamed rice",      badge: "" },
+      { name: "Fish Curry",           price: 320, img: "fish.jpg", desc: "Coastal style fish in coconut curry",          badge: "Special" },
+      { name: "Chicken Curry",        price: 280, img: "chicken.jpg", desc: "Home style spicy chicken curry",               badge: "" },
+      { name: "Palak Paneer",         price: 200, img: "palak.jpg", desc: "Cottage cheese in fresh spinach gravy",        badge: "Healthy" },
+      { name: "Sambar Rice",          price: 120, img: "sambar.jpg", desc: "Rice mixed with tangy tamarind sambar",        badge: "South Special" },
+      { name: "Bamboo Chicken",        price: 290, img: "bamboo.jpg", desc: "Spicy chicken cooked in iron wok gravy",       badge: "" },
+      { name: "Veg Pulao",            price: 160, img: "vegpulao.jpg", desc: "Fragrant basmati rice with mixed vegetables",  badge: "Healthy" }
+    ],
+    snacks: [
+      { name: "Samosa",          price: 50,  img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400&h=300&fit=crop", desc: "Crispy pastry with spiced potato filling",     badge: "Popular" },
+      { name: "Pani Puri",       price: 60,  img: "panipuri.jpg", desc: "Crispy puris with tangy spiced water",          badge: "Street Food" },
+      { name: "Bhel Puri",       price: 70,  img: "bhelpuri.jpg", desc: "Puffed rice with chutneys and fresh veggies",   badge: "" },
+      { name: "Aloo Tikki",      price: 80,  img: "alootikki.jpg", desc: "Crispy potato patties with green chutney",      badge: "Must Try" },
+      { name: "Spring Rolls",    price: 120, img: "springrolls.jpg", desc: "Crispy rolls with seasoned veggie filling",       badge: "" },
+      { name: "Vada Pav",        price: 60,  img: "vadapav.jpg", desc: "Mumbai style spicy potato burger",              badge: "Bestseller" },
+      { name: "French Fries",    price: 120, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop", desc: "Crispy golden salted potato fries",              badge: "" },
+      { name: "Onion Rings",     price: 100, img: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=400&h=300&fit=crop", desc: "Crispy battered golden onion rings",             badge: "" },
+      { name: "Masala Corn",     price: 90,  img: "masalcorn.jpg", desc: "Spicy boiled corn with butter and masala",       badge: "Healthy" },
+      { name: "Pakora",          price: 100, img: "pakora.jpg", desc: "Crispy fried mixed veggie fritters",             badge: "Monsoon Special" },
+      { name: "Maggi",           price: 80,  img: "maggi.jpg", desc: "Quick masala instant noodles",                   badge: "Comfort Food" },
+      { name: "Dhokla",          price: 90,  img: "dokla.jpg", desc: "Soft steamed gram flour Gujarati snack",         badge: "Healthy" },
+      { name: "Nachos",          price: 150, img: "nachos.jpg", desc: "Tortilla chips with salsa and cheese dip",       badge: "" },
+      { name: "Chicken Nuggets", price: 180, img: "nuggets.jpg", desc: "Crispy golden fried chicken bites",               badge: "Kids Fav" },
+      { name: "Cheese Balls",    price: 130, img: "cheeseballs.jpg", desc: "Crispy outside with gooey cheese inside",         badge: "Popular" }
+    ],
+    dinner: [
+      { name: "Pizza",            price: 299, img: "pizza.jpg", desc: "Cheesy wood fired stone baked pizza",           badge: "Bestseller" },
+      { name: "Pasta",            price: 249, img: "pasta.jpg", desc: "Creamy white sauce Italian pasta",               badge: "Popular" },
+      { name: "Grilled Chicken",  price: 350, img: "grilled.jpg", desc: "Herb marinated juicy grilled chicken",           badge: "Premium" },
+      { name: "Burger",           price: 199, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop", desc: "Juicy double patty loaded burger",               badge: "Must Try" },
+      { name: "Steak",            price: 450, img: "steak.jpg", desc: "Tender perfectly grilled beef steak",             badge: "Premium" },
+      { name: "Lasagna",          price: 320, img: "lasagna.jpg", desc: "Layered baked pasta with rich cheese sauce",     badge: "" },
+      { name: "Naan & Curry",     price: 220, img: "naancurry.jpg", desc: "Soft butter naan with rich aromatic curry",      badge: "" },
+      { name: "Tandoori Chicken", price: 380, img: "tandoorichicken.jpg", desc: "Clay oven roasted smoky whole chicken",          badge: "Special" },
+      { name: "Mutton Curry",     price: 350, img: "muttoncurry.jpg", desc: "Slow cooked tender spicy mutton curry",          badge: "" },
+      { name: "Prawn Masala",     price: 400, img: "prawn.jpg", desc: "Juicy prawns in spicy coastal masala",           badge: "Seafood" },
+      { name: "Vegetable Dum Biryani",  price: 280, img: "vegdum.jpg", desc: "Aromatic, layered, spiced, slow-cooked rice, vegetables, and fragrant spices",        badge: "Popular" },
+      { name: "Paneer Tikka",     price: 240, img: "paneertikka.jpg", desc: "Smoky tandoor grilled cottage cheese",           badge: "Veg Special" },
+      { name: "Dal Tadka",        price: 160, img: "daltadka.jpg", desc: "Tempered yellow lentil comfort curry",            badge: "Comfort Food" },
+      { name: "Kadhi Chawal",     price: 170, img: "kadhi.jpg", desc: "Tangy yogurt curry with steamed rice",           badge: "" },
+      { name: "Risotto",          price: 280, img: "risotto.jpg", desc: "Creamy slow cooked Italian rice dish",           badge: "Italian" }
+    ]
+  };
+
+  const categoryInfo = {
+    breakfast: { title: "🌅 <span>Breakfast</span> Menu", desc: "Start your day with our delicious breakfast options" },
+    lunch:     { title: "☀️ <span>Lunch</span> Menu",     desc: "Wholesome and filling meals for the afternoon" },
+    snacks:    { title: "🍟 <span>Snacks</span> Menu",    desc: "Quick bites and street food favorites" },
+    dinner:    { title: "🌙 <span>Dinner</span> Menu",    desc: "End your day with our hearty dinner specials" }
+  };
+
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let currentCategory = 'breakfast';
+
+  // Get all items from all categories
+  function getAllItems() {
+    let all = [];
+    Object.keys(menuData).forEach(cat => {
+      menuData[cat].forEach(item => {
+        all.push({ ...item, category: cat });
+      });
+    });
+    return all;
+  }
+
+  // SEARCH FUNCTION
+  function searchFood() {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const clearBtn = document.getElementById("clearBtn");
+    const categorySection = document.getElementById("categorySection");
+    const categoryTitle = document.getElementById("categoryTitle");
+    const categoryDesc = document.getElementById("categoryDesc");
+
+    // Show/hide clear button
+    clearBtn.classList.toggle("visible", query.length > 0);
+
+    if (query === "") {
+      // Restore category view
+      categorySection.style.display = "flex";
+      categoryTitle.innerHTML = categoryInfo[currentCategory].title;
+      categoryDesc.innerText = categoryInfo[currentCategory].desc;
+      renderCards(currentCategory);
+      return;
+    }
+
+    // Hide category buttons while searching
+    categorySection.style.display = "none";
+    categoryTitle.innerHTML = `🔍 Results for "<span>${query}</span>"`;
+    categoryDesc.innerText = "Searching across all categories...";
+
+    // Filter all items
+    const results = getAllItems().filter(item =>
+      item.name.toLowerCase().includes(query) ||
+      item.desc.toLowerCase().includes(query) ||
+      item.category.toLowerCase().includes(query)
+    );
+
+    renderSearchResults(results);
+  }
+
+  function clearSearch() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("clearBtn").classList.remove("visible");
+    document.getElementById("categorySection").style.display = "flex";
+    document.getElementById("categoryTitle").innerHTML = categoryInfo[currentCategory].title;
+    document.getElementById("categoryDesc").innerText = categoryInfo[currentCategory].desc;
+    renderCards(currentCategory);
+  }
+
+  function renderSearchResults(results) {
+    const grid = document.getElementById("menuGrid");
+    grid.innerHTML = "";
+
+    if (results.length === 0) {
+      grid.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-search"></i>
+          <h3>No results found</h3>
+          <p>Try searching for something else like "pizza", "biryani" or "healthy"</p>
+        </div>`;
+      return;
+    }
+
+    results.forEach((item, index) => {
+      const inCart = cart.find(c => c.name === item.name);
+      const qty = inCart ? inCart.qty : 0;
+      grid.innerHTML += `
+        <div class="food-card" style="animation-delay:${index * 0.05}s">
+          ${item.badge ? `<span class="food-badge">${item.badge}</span>` : ''}
+          <button class="like-btn" onclick="this.innerText = this.innerText === '🤍' ? '❤️' : '🤍'">🤍</button>
+          <img src="${item.img}" onerror="this.src='https://via.placeholder.com/400x300?text=${item.name}'">
+          <div class="card-content">
+            <span class="food-category-tag">${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</span>
+            <h4>${item.name}</h4>
+            <p>${item.desc}</p>
+            <div class="price-row">
+              <div class="price">₹${item.price}</div>
+              ${qty > 0
+                ? `<div class="qty-box">
+                    <button onclick="updateQty('${item.name}',${item.price},'${item.img}',-1,this)">−</button>
+                    <span>${qty}</span>
+                    <button onclick="updateQty('${item.name}',${item.price},'${item.img}',1,this)">+</button>
+                  </div>`
+                : `<button class="add-btn" onclick="addItem(this,'${item.name}',${item.price},'${item.img}')">Add</button>`
+              }
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function showCategory(type, btn) {
+    currentCategory = type;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById("categoryTitle").innerHTML = categoryInfo[type].title;
+    document.getElementById("categoryDesc").innerText = categoryInfo[type].desc;
+    renderCards(type);
+  }
+
+  function renderCards(type) {
+    const grid = document.getElementById("menuGrid");
+    const items = menuData[type];
+    grid.innerHTML = "";
+    items.forEach((item, index) => {
+      const inCart = cart.find(c => c.name === item.name);
+      const qty = inCart ? inCart.qty : 0;
+      grid.innerHTML += `
+        <div class="food-card" style="animation-delay:${index * 0.05}s">
+          ${item.badge ? `<span class="food-badge">${item.badge}</span>` : ''}
+          
+          <img src="${item.img}" onerror="this.src='https://via.placeholder.com/400x300?text=${item.name}'">
+          <div class="card-content">
+            <h4>${item.name}</h4>
+            <p>${item.desc}</p>
+            <div class="price-row">
+              <div class="price">₹${item.price}</div>
+              ${qty > 0
+                ? `<div class="qty-box">
+                    <button onclick="updateQty('${item.name}',${item.price},'${item.img}',-1,this)">−</button>
+                    <span>${qty}</span>
+                    <button onclick="updateQty('${item.name}',${item.price},'${item.img}',1,this)">+</button>
+                  </div>`
+                : `<button class="add-btn" onclick="addItem(this,'${item.name}',${item.price},'${item.img}')">Add</button>`
+              }
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function addItem(btn, name, price, img) {
+    let item = cart.find(i => i.name === name);
+    if (item) { item.qty++; }
+    else { cart.push({ name, price, img, qty: 1 }); }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount(); updateMiniCart();
+    showToast(name + " added to cart 🛒");
+    btn.outerHTML = `
+      <div class="qty-box">
+        <button onclick="updateQty('${name}',${price},'${img}',-1,this)">−</button>
+        <span>1</span>
+        <button onclick="updateQty('${name}',${price},'${img}',1,this)">+</button>
+      </div>`;
+  }
+
+  function updateQty(name, price, img, change, el) {
+    let item = cart.find(i => i.name === name);
+    if (!item) return;
+    item.qty += change;
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.name !== name);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount(); updateMiniCart();
+      el.parentElement.outerHTML = `<button class="add-btn" onclick="addItem(this,'${name}',${price},'${img}')">Add</button>`;
+      return;
+    }
+    el.parentElement.querySelector('span').innerText = item.qty;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount(); updateMiniCart();
+  }
+
+  function updateCartCount() {
+    let count = cart.reduce((s, i) => s + i.qty, 0);
+    let el = document.getElementById("cartCount");
+    if (el) el.innerText = count;
+  }
+
+  function updateMiniCart() {
+    let mini = document.getElementById("miniCart");
+    let text = document.getElementById("miniText");
+    if (!mini || !text) return;
+    if (cart.length === 0) { mini.classList.add("hidden"); return; }
+    let totalItems = cart.reduce((s, i) => s + i.qty, 0);
+    let totalPrice = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    text.innerText = `${totalItems} items | ₹${totalPrice}`;
+    mini.classList.remove("hidden");
+  }
+
+  function showToast(msg) {
+    let toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.top = "80px";
+    setTimeout(() => { toast.style.top = "-100px"; }, 2000);
+  }
+
+  // Profile
+  // ADD THIS:
+let user = localStorage.getItem("user");
+let profileIcon = document.getElementById("profileIcon");
+if (profileIcon && user) {
+  profileIcon.innerText = user.charAt(0).toUpperCase();
+}
+function toggleProfile() {
+    let menu = document.getElementById("profileMenu");
+    menu.style.display = menu.style.display === "none" ? "block" : "none";
+  }
+  function logout() { window.location.href = "index.html"; }
+
+  // INIT
+  renderCards('breakfast');
+  updateCartCount();
+  updateMiniCart();
+</script>
+</body>
+</html>

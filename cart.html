@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart</title>
+<link rel="stylesheet" href="style.css">
+<style>
+@media (max-width: 768px) {
+  .cart-page {
+    padding: 20px 15px 40px;
+  }
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cart-img {
+    width: 60px;
+    height: 60px;
+  }
+  .cart-details h4 {
+    font-size: 14px;
+  }
+  .order-btn {
+    width: 100%;
+    font-size: 14px;
+    padding: 12px;
+  }
+  .back-btn {
+    display: block;
+    margin: 15px auto;
+    width: 90%;
+    text-align: center;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  #paymentSection button {
+    width: 100%;
+    margin: 8px 0;
+    display: block;
+  }
+  #upi {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+  }
+  .qty-box {
+    margin-top: 5px;
+  }
+  .delete {
+    align-self: center;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="cart-page">
+  <h1>🛒 Your Cart</h1>
+  <div id="cartItems"></div>
+  <h2>Total: ₹<span id="total">0</span></h2>
+  <button class="order-btn" onclick="showPayment()">Order Now</button>
+
+  <!-- PAYMENT SECTION -->
+  <div id="paymentSection" class="hidden">
+    <h3>Select Payment Method</h3><br>
+    <button onclick="cashOnDelivery()" style="color:black; border:2px solid red;">Cash on Delivery</button>
+    <button onclick="showUPI()" style="color:black; border:2px solid red;">Online Payment</button>
+    <div id="upiBox" class="hidden">
+      <input type="text" id="upi" placeholder="Enter UPI ID">
+      <div id="paymentLoader" class="hidden loader-box">
+        <div class="spinner"></div>
+        <p>Verifying UPI...</p>
+      </div>
+      <button class="pay-btn" onclick="payNow()">Pay</button>
+    </div>
+  </div>
+</div>
+
+<button class="back-btn" onclick="goHome()">← Back to Home</button>
+<script src="script.js"></script>
+
+</body>
+</html>

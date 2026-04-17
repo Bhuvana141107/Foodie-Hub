@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuisine Menu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="cuisine-page-body"> <nav class="navbar">
+        <h2 class="nav-logo">Foodie<span>Hub</span></h2>
+        <button class="hamburger" onclick="toggleMenu()" >
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-right">
+
+        <ul class="nav-links">
+            <li><a href="index.html?home=true">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <a href="cart.html">Cart 🛒 (<span id="cartCount">0</span>)</a>
+     </ul>
+     <div class="profile" onclick="toggleProfile()">
+    <div id="profileIcon"></div>
+
+    <div id="profileMenu" class="hidden">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+  </div>  
+  </nav>
+
+    <section class="cuisine-page">
+           <h1 id="cuisineTitle">Loading...</h1>
+        <p id="cuisineDescription"></p>
+        
+        <div id="foodContainer" class="food-grid"></div>
+    </section>
+
+        
+       
+   
+       
+       
+    
+<div id="toast" class="toast">Item added</div>
+<div id="miniCart" class="mini-cart hidden">
+  <span id="miniText">0 items | ₹0</span>
+  <button onclick="window.location.href='cart.html'">View Cart</button>
+</div>
+<script src="script.js"></script>
+<script>
+  // Force call AFTER everything loads
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const cuisineType = params.get("type");
+    const mood = params.get("mood");
+
+    console.log("CUISINE TYPE:", cuisineType);
+    console.log("MOOD:", mood);
+
+    if (cuisineType) {
+      showCuisine(cuisineType);
+    } else if (mood) {
+      showMoodFood(mood);
+    }
+  };
+
+</script>
+ <button class="back-btn" onclick="goHome()">← Back to Home</button>
+
+</body>
+</html>

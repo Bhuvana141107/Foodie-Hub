@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - FoodieHub</title>
+<link rel="stylesheet" href="style.css">
+<style>
+/* FOOD SLIDER */
+.food-animation {
+  overflow: hidden;
+  width: 100%;
+  padding: 30px 0;
+  text-align: center;
+}
+
+.food-slider {
+  display: flex;
+  gap: 15px;
+  width: max-content;
+  animation: slide 6s infinite linear;
+}
+
+.food-slider img {
+  width: 200px;
+  height: 150px;
+  border-radius: 15px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 10px 15px; flex-wrap: nowrap; height: auto !important; align-items: center; }
+  .profile { display: none; }
+  .nav-right { position: absolute; top: 50px; left: 0; width: 100%; z-index: 999; }
+  .nav-links { display: none !important; flex-direction: column; width: 100%; padding: 10px 0; gap: 0; background: linear-gradient(135deg, #ff7e5f, #feb47b); margin: 0; }
+  .nav-links.open { display: flex !important; }
+  .nav-links li { list-style: none; }
+  .nav-links a { padding: 12px 20px; display: block; color: white; border-bottom: 1px solid rgba(255,255,255,0.2); }
+  .about-hero { padding: 80px 15px 30px; }
+  .about-hero h1 { font-size: 22px; }
+  .about-hero p { font-size: 14px; }
+  .story-box { padding: 20px; margin: 10px; }
+  .food-slider { animation: slide 5s infinite linear; gap: 10px; }
+  .food-slider img { width: 140px; height: 110px; flex-shrink: 0; }
+  .about-features { flex-direction: column; align-items: center; padding: 20px; }
+  .feature { width: 90%; }
+  .testimonial-container { flex-direction: column; align-items: center; }
+  .testimonial { width: 90%; }
+  .about-cta { padding: 30px 15px; }
+  .about-cta h2 { font-size: 20px; }
+  .about-cta button { width: 90%; }
+}
+
+@media (max-width: 480px) {
+  .about-hero h1 { font-size: 18px; }
+  .feature { width: 100%; }
+  .testimonial { width: 100%; }
+}
+</style></head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <h2 class="nav-logo">Foodie<span>Hub</span></h2>
+  <button class="hamburger" onclick="toggleMenu()" >
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html?home=true">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="cart.html">Cart 🛒 (<span id="cartCount">0</span>)</a></li>
+    </ul>
+    <div class="profile" onclick="toggleProfile()">
+      <div id="profileIcon"></div>
+      <div id="profileMenu" class="hidden">
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero">
+  <h1>🍴 Where Every Bite Feels Like Home</h1>
+  <p>Delicious food. Beautiful experience. Delivered to your mood 💫</p>
+</section>
+
+<!-- STORY -->
+<section class="about-story">
+  <div class="story-box">
+    <h2>Our Story ❤️</h2>
+    <p>At <b>FoodieHub</b>, we believe food is not just about eating —
+      it's about emotions, comfort, and happiness.</p>
+    <p>Whether you're feeling happy, sad, lazy, or craving something special,
+      we bring you the perfect dish for your mood.</p>
+    <p>Every dish we deliver carries warmth, care, and a little bit of joy.
+      From late-night cravings to celebration meals, we're always there with you.</p>
+    <p>We don't just serve food — we create moments that turn into memories.
+      Because the right meal at the right time can change your entire mood.</p>
+    <p>Our mission is simple: to make you smile with every bite.
+      No matter how your day is going, Foodie is here to make it better.</p>
+    <p>Once you order from us, it's not just food — it's an experience you'll want again and again.</p>
+  </div>  <!-- ← this closing div was missing before -->
+</section>
+
+<!-- FOOD ANIMATION -->
+<section class="food-animation">
+  <h2>Top Selling Dishes</h2>
+  <div class="food-slider">
+  <img src="food1.jpg">
+  <img src="food2.jpg">
+  <img src="food3.jpg">
+  <img src="food5.png">
+  <img src="food6.png">
+  <!-- duplicate for seamless loop -->
+  <img src="food1.jpg">
+  <img src="food2.jpg">
+  <img src="food3.jpg">
+  <img src="food5.png">
+  <img src="food6.png">
+</div>
+</section>
+
+<!-- FEATURES -->
+<section class="about-features">
+  <div class="feature">
+    <h3>⚡ Lightning Fast Delivery</h3>
+    <p>Your food reaches you hot & fresh in minutes</p>
+  </div>
+  <div class="feature">
+    <h3>💖 Mood-Based Food</h3>
+    <p>We recommend food based on your emotions</p>
+  </div>
+  <div class="feature">
+    <h3>🍽️ Premium Quality</h3>
+    <p>Carefully curated dishes with top ingredients</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <h2>What Our Customers Say 🌟</h2>
+  <div class="testimonial-container">
+    <div class="testimonial">
+      <p>"This app literally understands my mood 😭❤️. The food quality is top-notch. It feels like restaurant dining at home!"</p>
+      <h4>- Priya</h4>
+    </div>
+    <div class="testimonial">
+      <p>"Super fast delivery and the food was still hot 🔥 Best food experience I've ever had. Super smooth!"</p>
+      <h4>- Arjun</h4>
+    </div>
+    <div class="testimonial">
+      <p>"I ordered when I was sad and it actually made me feel better 🥹. Their desserts are addictive 🤤 I keep ordering again and again!"</p>
+      <h4>- Sneha</h4>
+    </div>
+    <div class="testimonial">
+      <p>"I ordered for my family and everyone loved it. Highly recommended! Affordable prices with premium taste. Totally worth it 💯"</p>
+      <h4>- Ahaan</h4>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="about-cta">
+  <h2>Ready to Feel Good? 🍜</h2>
+  <p>Your perfect meal is just one click away</p>
+  <button onclick="goHome()">Order Now</button>
+</section>
+
+<div id="toast" class="toast">Item added</div>
+<div id="miniCart" class="mini-cart hidden">
+  <span id="miniText">0 items | ₹0</span>
+  <button onclick="window.location.href='cart.html'">View Cart</button>
+</div>
+
+<script>
+function goHome() {
+  window.location.href = "index.html?home=true";
+}
+</script>
+<script src="script.js"></script>
+
+</body>
+</html>

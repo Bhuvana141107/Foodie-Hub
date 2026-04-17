@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foodie Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="landing">
+<video autoplay muted loop id="bgVideo">
+<source src="video 4.mp4" type="video/mp4">
+</video>
+<div class="overlay">
+<h1 style="color:white";>Welcome to Foodie Hub</h1>
+<button onclick="showLogin()">Get Started</button>
+</div>
+</section>
+
+<section id="login" class="hidden" >
+
+  <!-- 🔥 PASTE NEW LOGIN UI HERE -->
+  <div class="login-card" id="loginCard">
+   <h1 class="logo">Foodie<span>Hub</span></h1>
+    <p class="subtitle">Login to start ordering</p>
+
+    <div class="tabs">
+      <button class="active">Login</button>
+      <button onclick="showSignup()">Sign Up</button>
+    </div>
+
+    <div class="input-group">
+    <label>📧E-mail</label>
+
+      <input type="email" id="email" placeholder="college@example.com">
+    </div>
+
+    <div class="input-group">
+    <label>🔒Password</label>
+      <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Enter password">
+      <span class="eye" onclick="togglePassword()">👁️</span>
+    </div>
+</div>
+
+    <div class="options">
+      <label><input type="checkbox"> Remember Me</label>
+      <p class="forgot" onclick="forgotPassword()">Forgot Password?</p>
+    </div>
+
+    <button class="login-btn" onclick="loginUser()">Login →</button>
+
+    <p id="error"></p>
+
+    <p class="switch">
+      Don’t have an account?
+      <span onclick="showSignup()" >Sign up here</span>
+    </p>
+
+  </div>
+
+</section>
+<section id="main" class="hidden">
+
+  <nav class="navbar">
+    <h2 class="nav-logo">Foodie<span>Hub</span></h2>
+     <button class="hamburger" onclick="toggleMenu()" >
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="index.html?home=true">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="cart.html">Cart 🛒 (<span id="cartCount">0</span>)</a></li>
+      </ul>
+      <div class="profile" onclick="toggleProfile()">
+    <div id="profileIcon"></div>
+
+    <div id="profileMenu" class="hidden">
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+  </div>  
+  </nav>
+
+  <section class="hero">
+    <img id="heroImage" src="food1.jpg">
+    <button class="arrow left" onclick="prevImage();stopSlider();">&#10094;</button>
+    <button class="arrow right" onclick="nextImage();stopSlider();">&#10095;</button>
+  </section>
+<h2 style="text-align:center; margin-top:40px; color:black;">
+  Discover Food Based on Your Mood ✨
+</h2>
+<div class="mood-section">
+  <h2>How are you feeling today? 😊</h2>
+
+  <div class="mood-buttons">
+    <button onclick="selectMood('hungry')">😋 Hungry</button>
+    <button onclick="selectMood('lazy')">😴 Lazy</button>
+    <button onclick="selectMood('healthy')">💪 Healthy</button>
+    <button onclick="selectMood('craving')">😍 Craving</button>
+    <button onclick="selectMood('happy')">😊 Happy</button>
+    <button onclick="selectMood('sad')">😔 Sad</button>
+  </div>
+</div>
+  
+<!-- MULTI CUISINE -->
+<section class="cuisine">
+  <h2>Multi-Cuisine</h2>
+
+  <div class="cuisine-grid">
+    <div class="cuisine-card" onclick="window.location.href='cuisine.html?type=italian'">
+      <img src="italian.jpg">
+      <h3>Italian</h3>
+    </div>
+
+    <div class="cuisine-card" onclick="window.location.href='cuisine.html?type=chinese'">
+      <img src="chinese.jpg">
+      <h3>Chinese</h3>
+    </div>
+
+    <div class="cuisine-card" onclick="window.location.href='cuisine.html?type=indian'">
+      <img src="indian.jpg">
+      <h3>Indian</h3>
+    </div>
+
+    <div class="cuisine-card" onclick="window.location.href='cuisine.html?type=french'">
+      <img src="french.jpg">
+      <h3>French</h3>
+    </div>
+  </div>
+
+</section>
+
+<!-- FOOD ITEMS -->
+<section id="foodSection" class="hidden">
+  <h2 id="cuisineTitle"></h2>
+  <div id="foodContainer" class="food-grid"></div>
+</section>
+<section class="season">
+  <h2 style="text-align:center";>🌸 Season's Specials</h2><br>
+<button type="button" onclick="changeSeason('summer')"
+style="color:black;background: linear-gradient(135deg, #fcd34d, #fb923c);">
+☀️ Summer
+</button>
+
+<button type="button" onclick="changeSeason('monsoon')"
+style="color:black;background: linear-gradient(135deg, #94a3b8, #64748b);">
+🌧 Monsoon
+</button>
+
+<button type="button" onclick="changeSeason('winter')"
+style="color:black;background: linear-gradient(135deg, #dbeafe, #f1f5f9);">
+❄️ Winter
+</button>
+<div id="seasonFoods" class="food-grid"></div>
+
+  
+    <!-- JS will fill this -->
+  </div>
+</section>
+<section class="trending">
+  <h2 style="text-align:center";>🔥 Trending Now</h2>
+
+  <div class="trending-grid">
+
+    <div class="trend-card">
+  <span class="badge">Bestseller</span>
+  <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=300&fit=crop" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+  <h3>Margherita Pizza</h3>
+  <p>Classic tomato base with fresh mozzarella</p>
+  <div class="price-row">
+    <div class="price">₹320</div>
+    <button class="add-btn" onclick="addToCartUI(this,'Margherita Pizza',320,'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&h=300&fit=crop')">Add</button>
+  </div>
+</div>
+
+<div class="trend-card">
+  <span class="badge">Hot</span>
+  <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+  <h3>Sushi Roll</h3>
+  <p>Fresh Japanese rice rolls with vegetables</p>
+  <div class="price-row">
+    <div class="price">₹380</div>
+    <button class="add-btn" onclick="addToCartUI(this,'Sushi Roll',380,'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=400&h=300&fit=crop')">Add</button>
+  </div>
+</div>
+
+<div class="trend-card">
+  <span class="badge">Top Rated</span>
+  <img src="waffle.jpg" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+  <h3>Waffle</h3>
+  <p>Crispy golden waffle with maple syrup</p>
+  <div class="price-row">
+    <div class="price">₹280</div>
+    <button class="add-btn" onclick="addToCartUI(this,'Waffle',180,'https://images.unsplash.com/photo-1484723091739-30990106e9dc?w=400&h=300&fit=crop')">Add</button>
+  </div>
+</div>
+
+<div class="trend-card">
+  <span class="badge">Popular</span>
+  <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+  <h3>Pad Thai</h3>
+  <p>Thai stir fried rice noodles with peanuts</p>
+  <div class="price-row">
+    <div class="price">₹300</div>
+    <button class="add-btn" onclick="addToCartUI(this,'Pad Thai',280,'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=300&fit=crop')">Add</button>
+  </div>
+</div>
+
+<div class="trend-card">
+  <span class="badge">Must Try</span>
+  <img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&h=300&fit=crop" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+  <h3>Tacos</h3>
+  <p>Mexican soft shell tacos with spicy filling</p>
+  <div class="price-row">
+    <div class="price">₹320</div>
+    <button class="add-btn" onclick="addToCartUI(this,'Tacos',220,'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=400&h=300&fit=crop')">Add</button>
+  </div>
+</div>
+  </div>
+</section>
+<div class="wave"></div>
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- LOGO + ABOUT -->
+    <div class="footer-section">
+      <h1 class="footer-logo">Foodie<span>Hub</span></h1>
+      <p>Delicious food delivered to your doorstep. Explore cuisines, trending dishes, and seasonal specials.</p>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href ="reviews.html">Reviews</a></li>
+        
+      </ul>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-section">
+      <h3>Contact</h3>
+      <p>Email: foodiehub@gmail.com</p>
+      <p>Phone: +91 9876543210</p>
+      <p>Location: India</p>
+      <div class="footer-section">
+  <h3>Subscribe</h3>
+  <p>Get latest offers & updates</p>
+
+  <div class="subscribe-box">
+  <input type="email" id="subscribeEmail" placeholder="Enter your email">
+  <button onclick="subscribeUser()">Subscribe</button>
+</div>
+<p id="subscribeMsg" style="color:#ff7e5f; font-size:13px; margin-top:8px;"></p>
+</div>
+    </div>
+
+    <!-- SOCIAL MEDIA -->
+    <div class="footer-section">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="https://www.geeksforgeeks.org/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.w3schools.com/"><i class="fab fa-instagram"></i></a>
+        <a href="https://x.com/Fooddotcom"><i class="fab fa-twitter"></i></a>
+        <a href="http://www.youtube.com/@FoodLinkyt"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2026 Foodie Hub | All Rights Reserved</p>
+  </div>
+</footer>
+</section>
+
+<div id="toast" class="toast">Item added</div>
+<div id="miniCart" class="mini-cart hidden">
+<span id="miniText">0 items | ₹0</span>
+  <button onclick="window.location.href='cart.html'">View Cart</button>
+</div>
+
+<button id="topBtn">↑</button>
+<script src="script.js"></script>
+
+</body>
+</html>
