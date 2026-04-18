@@ -32,7 +32,7 @@ const foodData = {
   ],
   indian: [
     { name: "Shahi Paneer", price: 240, img: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&h=300&fit=crop", desc: "Rich royal creamy paneer curry" },
-    { name: "Mutton Rogan Josh", price: 380, img: "mutton.jpg", desc: "Kashmiri slow cooked aromatic mutton" },
+    { name: "Mutton Rogan Josh", price: 380, img: "mutton.JPG", desc: "Kashmiri slow cooked aromatic mutton" },
     { name: "Hyderabadi Biryani", price: 320, img: "Dum Biryani.jpg", desc: "Dum cooked layered Hyderabadi biryani" },
     { name: "Peshwari Naan", price: 80, img: "naan.jpg", desc: "Sweet stuffed naan with almonds coconut" },
     { name: "Lassi", price: 90, img: "lassi.jpg", desc: "Thick sweet chilled yogurt drink" },
@@ -64,7 +64,7 @@ const foodData = {
 const allMoodFoods = [
   // HUNGRY - heavy filling foods (9 items)
   { name: "Hyderabadi Biryani", price: 320, img: "Dum Biryani.jpg", desc: "Dum cooked layered Hyderabadi biryani", moods: ["hungry"] },
-  { name: "Mutton Rogan Josh", price: 380, img: "mutton.jpg", desc: "Kashmiri slow cooked aromatic mutton", moods: ["hungry"] },
+  { name: "Mutton Rogan Josh", price: 380, img: "mutton.JPG", desc: "Kashmiri slow cooked aromatic mutton", moods: ["hungry"] },
   { name: "Osso Buco", price: 480, img: "ossbuco.jpg", desc: "Braised veal shanks with gremolata", moods: ["hungry"] },
   { name: "Peking Duck", price: 550, img: "duck.jpg", desc: "Crispy roasted duck with pancakes", moods: ["hungry"] },
   { name: "Beef Bourguignon", price: 520, img: "beef.jpg", desc: "Slow braised beef in red wine sauce", moods: ["hungry"] },
