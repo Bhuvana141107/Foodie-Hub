@@ -207,10 +207,18 @@ function toggleProfile() {
 function logout() {
   localStorage.removeItem("user");
 
-  document.getElementById("main").classList.add("hidden");
-  document.getElementById("login").classList.remove("hidden");
-}
+  // If elements exist → handle UI
+  let main = document.getElementById("main");
+  let login = document.getElementById("login");
 
+  if (main && login) {
+    main.classList.add("hidden");
+    login.classList.remove("hidden");
+  } else {
+    // Otherwise redirect (for pages like about.html)
+    window.location.href = "index.html?login=true";
+  }
+}
 function showLoginFromSignup() {
   document.getElementById("loginCard").innerHTML = `
     <h1 class="logo">Foodie<span>Hub</span></h1>
@@ -963,6 +971,16 @@ if (topBtn) {
   updateMiniCart();
 
   const params = new URLSearchParams(window.location.search);
+  if (params.get("login") === "true") {
+    document.getElementById("landing")?.classList.add("hidden");
+
+    const login = document.getElementById("login");
+    if (login) {
+      login.classList.remove("hidden");
+      login.style.display = "flex";
+    }
+  }
+
   const isHome = params.get("home");
 
   if (isHome === "true") {
