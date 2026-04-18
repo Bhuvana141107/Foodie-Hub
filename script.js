@@ -885,7 +885,7 @@ function updateMiniCart() {
     { name: "Bhutte ka Kees 🌽", price: 130, img: "bhutte.jpg", desc: "Grated corn cooked with spices and milk" },
     { name: "Onion Bajji 🧅", price: 190, img: "onionbhaji.jpg", desc: "Crispy fried onion fritters with chutney" },
     { name: "Mirchi Bajji 🌶️", price: 160, img: "mirchibhaji.jpg", desc: "Stuffed chilli fritters deep fried crispy" },
-    { name: "Masala Peanuts 🥜", price: 150, img: "peanuts1.jpg", desc: "Roasted spicy masala coated peanuts" },
+    { name: "Masala Peanuts 🥜", price: 150, img: "peanuts1.JPG", desc: "Roasted spicy masala coated peanuts" },
     { name: "Adrak Chai 🍵", price: 100, img: "chai.jpg", desc: "Strong ginger tea for rainy evenings" }
   ],
   winter: [
